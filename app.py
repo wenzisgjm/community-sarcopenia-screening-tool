@@ -1,9 +1,10 @@
 from pathlib import Path
 
 import joblib
-import numpy as np
 import pandas as pd
 import streamlit as st
+
+from screening_core import predict, read_uploaded_table, validate_batch_data
 
 
 APP_DIR = Path(__file__).resolve().parent
@@ -27,13 +28,24 @@ EXPECTED_FEATURES = [
     "obe_4class",
 ]
 
-MODEL_VERSION = "1.0"
+MODEL_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 LAST_UPDATED = "August 2026"
 VALIDATION_N = 1156
 REPOSITORY_URL = "https://github.com/wenzisgjm/community-sarcopenia-screening-tool"
 
-BINARY_FEATURES = ["pa_aerobic", "is_allownc", "Chew_Diff", "Prot_Deficiency"]
-NUMERIC_FEATURES = EXPECTED_FEATURES.copy()
+TEMPORAL_VALIDATION_PERFORMANCE = [
+    {"Metric": "ROC-AUC", "Estimate": "0.837", "95% CI": "0.792-0.877"},
+    {"Metric": "PR-AUC", "Estimate": "0.324", "95% CI": "0.251-0.425"},
+    {"Metric": "Accuracy", "Estimate": "0.767", "95% CI": "0.742-0.792"},
+    {"Metric": "Balanced accuracy", "Estimate": "0.776", "95% CI": "0.729-0.822"},
+    {"Metric": "Sensitivity", "Estimate": "0.786", "95% CI": "0.702-0.869"},
+    {"Metric": "Specificity", "Estimate": "0.766", "95% CI": "0.740-0.791"},
+    {"Metric": "PPV", "Estimate": "0.208", "95% CI": "0.183-0.235"},
+    {"Metric": "NPV", "Estimate": "0.979", "95% CI": "0.970-0.987"},
+    {"Metric": "F1 score", "Estimate": "0.329", "95% CI": "0.292-0.369"},
+    {"Metric": "Brier score", "Estimate": "0.058", "95% CI": "0.054-0.061"},
+]
 
 FIELD_DESCRIPTIONS = {
     "ID": "Participant identifier, used to locate screen-positive individuals; not used for model prediction.",
@@ -112,78 +124,6 @@ def load_artifacts():
     return model, list(features), threshold, metadata, {}, None
 
 
-def predict(model, data: pd.DataFrame, threshold: float) -> pd.DataFrame:
-    prob = model.predict_proba(data)[:, 1]
-    pred = (prob >= threshold).astype(int)
-    out = data.copy()
-    out["model_score"] = prob
-    out["predicted_class"] = pred
-    out["screening_result"] = np.where(pred == 1, "Screen positive", "Screen negative")
-    return out
-
-
-def read_uploaded_table(uploaded_file) -> pd.DataFrame:
-    suffix = Path(uploaded_file.name).suffix.lower()
-    if suffix in {".xlsx", ".xls"}:
-        return pd.read_excel(uploaded_file)
-    return pd.read_csv(uploaded_file)
-
-
-def validate_batch_data(data: pd.DataFrame, feature_columns: list[str]):
-    validated = data.copy()
-    errors = []
-    warnings = []
-
-    if validated.empty:
-        errors.append("The uploaded file contains no participant rows.")
-        return validated, errors, warnings
-
-    for column in feature_columns:
-        original = validated[column]
-        converted = pd.to_numeric(original, errors="coerce")
-        invalid_count = int((original.notna() & converted.isna()).sum())
-        if invalid_count:
-            errors.append(f"{column} contains {invalid_count} non-numeric value(s).")
-        validated[column] = converted
-
-    if validated["age"].isna().any():
-        errors.append("Age is required for every participant and cannot be missing.")
-    elif (validated["age"] < 65).any():
-        count = int((validated["age"] < 65).sum())
-        errors.append(
-            f"{count} participant(s) are younger than 65 years. The model should only be used within its intended population."
-        )
-
-    for column in BINARY_FEATURES:
-        invalid_codes = sorted(
-            validated.loc[validated[column].notna() & ~validated[column].isin([0, 1]), column].unique().tolist()
-        )
-        if invalid_codes:
-            errors.append(f"{column} contains invalid code(s): {invalid_codes}. Allowed codes are 0 and 1.")
-
-    weight_codes = validated.loc[
-        validated["obe_4class"].notna() & ~validated["obe_4class"].isin([0, 1, 2, 3]), "obe_4class"
-    ].unique().tolist()
-    if len(weight_codes):
-        errors.append(
-            f"obe_4class contains invalid code(s): {sorted(weight_codes)}. Allowed codes are 0, 1, 2, and 3."
-        )
-
-    missing_counts = validated[feature_columns].isna().sum()
-    imputed_columns = [f"{column} ({int(count)})" for column, count in missing_counts.items() if count and column != "age"]
-    if imputed_columns:
-        warnings.append(
-            "Missing model inputs will be imputed by the locked preprocessing pipeline: " + ", ".join(imputed_columns) + "."
-        )
-
-    if validated["ID"].isna().any():
-        warnings.append("One or more participant identifiers are missing, which may make follow-up difficult.")
-    if validated["ID"].duplicated().any():
-        warnings.append("Duplicate participant identifiers were detected. Confirm that each row represents the intended participant record.")
-
-    return validated, errors, warnings
-
-
 st.title("Community-Based Sarcopenia Screening Tool for Older Adults")
 st.caption("Strong bodies build strong communities.")
 st.info(
@@ -231,7 +171,8 @@ tab_screening, tab_guide, tab_transparency, tab_governance = st.tabs(
 with tab_screening:
     st.subheader("Batch Screening")
     st.info(
-        "Upload a CSV or Excel file containing participant identifiers, sex, and the required screening "
+        "Users can upload batch data in CSV or Excel format. The file must contain participant codes, "
+        "sex, and the required screening "
         "variables. The tool will identify screen-positive participants who should receive further assessment."
     )
     st.write("Upload a CSV or Excel file containing at least the following columns:")
@@ -242,7 +183,7 @@ with tab_screening:
         "They are not used to calculate model risk."
     )
 
-    uploaded = st.file_uploader("Select a file for batch prediction", type=["csv", "xlsx", "xls"])
+    uploaded = st.file_uploader("Select a file for batch prediction", type=["csv", "xlsx"])
     if uploaded is not None:
         try:
             batch_df = read_uploaded_table(uploaded)
@@ -287,18 +228,31 @@ with tab_screening:
 
                     st.bar_chart(prediction_details["screening_result"].value_counts())
 
-                    result_columns = ["ID", "sex"] + best_features + ["model_score", "screening_result"]
+                    result_columns = ["ID", "sex"] + best_features + [
+                        "model_score",
+                        "screening_result",
+                        "recommended_action",
+                    ]
                     result_table = prediction_details[result_columns].copy()
+                    display_table = result_table[
+                        ["ID", "sex", "model_score", "screening_result"]
+                    ].copy()
 
                     def highlight_screen_positive(row):
                         if row["screening_result"] == "Screen positive":
                             return ["background-color: #fee2e2; color: #991b1b; font-weight: 600"] * len(row)
                         return [""] * len(row)
 
-                    styled_result = result_table.style.apply(highlight_screen_positive, axis=1).format(
+                    styled_result = display_table.style.apply(highlight_screen_positive, axis=1).format(
                         {"model_score": "{:.1%}"}
                     )
                     st.dataframe(styled_result, width="stretch", hide_index=True)
+
+                    st.markdown(
+                        "**Recommended actions**\n\n"
+                        "- **Screen positive:** Arrange a standardised sarcopenia assessment according to the local protocol.\n"
+                        "- **Screen negative:** No automatic referral based on this tool alone; assess further if symptoms or clinical concern are present."
+                    )
 
                     csv_bytes = result_table.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig")
                     st.download_button(
@@ -366,7 +320,10 @@ with tab_transparency:
     info = {
         "Algorithm": metadata.get("final_algorithm", "LogisticRegression"),
         "Model version": MODEL_VERSION,
+        "Web application version": APP_VERSION,
         "Current status": "Research demonstration and preliminary screening aid",
+        "Web framework": "Streamlit",
+        "Hosting platform": "Render",
         "Predictor set": metadata.get("final_feature_set", "Model_2"),
         "Number of predictors": len(best_features),
         "Development sample": f"{metadata.get('development_year', 2022)} dataset, n={metadata.get('development_n', 889)}",
@@ -383,6 +340,21 @@ with tab_transparency:
         columns=["Item", "Details"],
     )
     st.table(info_table)
+
+    st.subheader("Temporal Validation Performance")
+    st.caption(
+        "Performance of the locked final model in the 2024 KNHANES temporal validation dataset."
+    )
+    st.dataframe(
+        pd.DataFrame(TEMPORAL_VALIDATION_PERFORMANCE),
+        width="stretch",
+        hide_index=True,
+    )
+    st.caption(
+        "ROC-AUC, area under the receiver operating characteristic curve; PR-AUC, area under the "
+        "precision-recall curve; PPV, positive predictive value; NPV, negative predictive value; "
+        "CI, confidence interval."
+    )
 
     st.subheader("Threshold Interpretation")
     st.info(
@@ -452,6 +424,6 @@ with tab_governance:
 
     st.subheader("Documentation and Change History")
     st.markdown(
-        f"Model version {MODEL_VERSION} | Updated {LAST_UPDATED} | "
+        f"Model version {MODEL_VERSION} | Web application version {APP_VERSION} | Updated {LAST_UPDATED} | "
         f"[Source code and version history]({REPOSITORY_URL})"
     )
