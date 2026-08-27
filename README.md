@@ -51,6 +51,8 @@ The score is a screening estimate, not a confirmed individual clinical probabili
 - `examples/`: synthetic input and expected output files.
 - `tests/`: automated software-validation tests.
 - `supplementary_material/`: manuscript-ready interface screenshots generated with synthetic data.
+- `USER_GUIDE.md`: illustrated user instructions, input coding, result interpretation, and troubleshooting.
+- `output/pdf/USER_GUIDE.pdf`: submission-ready illustrated user manual.
 - `VALIDATION.md`: software-validation scope, procedures, and temporal-validation results.
 - `requirements.txt`: pinned runtime dependencies.
 - `.python-version`: pinned Python version for deployment.
@@ -82,6 +84,10 @@ python -m unittest discover -s tests -v
 ```
 
 The tests verify locked artifact metadata, threshold behavior, input validation, recommended actions, and prediction parity against the synthetic expected-output file. See `VALIDATION.md` for details.
+
+## User documentation
+
+See `USER_GUIDE.md` for the accessible web version of the illustrated user manual. A fixed-layout PDF version suitable for supplementary-material submission is available at `output/pdf/USER_GUIDE.pdf`.
 
 ## Important limitations
 

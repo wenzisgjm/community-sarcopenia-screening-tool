@@ -2,6 +2,8 @@
 
 The screenshots in this directory were generated from web application version `1.1.0` using only the synthetic records in `examples/sample_input.csv`. They contain no participant or clinical-study data.
 
+The screenshots are incorporated into the illustrated `USER_GUIDE.md` and the submission-ready `output/pdf/USER_GUIDE.pdf` user manual.
+
 - `Figure_S1A_screening_interface.png`: batch-screening landing interface, intended-use statement, safety warning, and required columns.
 - `Figure_S1B_batch_results.png`: synthetic batch-screening results, screening summary, model scores, classifications, and recommended actions.
 - `Figure_S1C_how_to_use.png`: intended users, recommended workflow, training requirements, input definitions, and interpretation guidance.
