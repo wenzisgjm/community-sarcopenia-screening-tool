@@ -2,7 +2,7 @@
 
 ## Scope
 
-This document describes validation checks for web application version `1.1.0` using locked model version `1.0.0`. The checks evaluate implementation consistency and input-handling behavior. They do not constitute prospective clinical validation or external validation in an independent population.
+This document describes validation checks for web application version `1.1.1` using locked model version `1.0.0`. The checks evaluate implementation consistency and input-handling behavior. They do not constitute prospective clinical validation or external validation in an independent population.
 
 ## Locked artifacts
 
@@ -76,10 +76,11 @@ The application checks required columns, numeric conversion, age eligibility, bi
 - The model, preprocessing pipeline, feature order, and threshold are stored as locked artifacts.
 - Synthetic expected outputs provide a regression check for future application changes.
 - Model and application versions are reported separately in the interface.
+- The illustrated PDF user manual is version controlled and is available from the **How to Use** tab.
 
 ## Validation record
 
-On 28 August 2026, the automated suite completed successfully under Python `3.12.13`: 6 tests run, 6 passed, 0 failed. The Streamlit application compiled successfully, started locally, and returned `ok` from `/_stcore/health`. The batch-screening workflow was exercised with `examples/sample_input.csv`, and the resulting interface was reviewed in a desktop viewport before the supplementary screenshots were retained.
+On 28 August 2026, the automated suite completed successfully under Python `3.12.13`: 6 tests run, 6 passed, 0 failed. The Streamlit application compiled successfully, started locally, and returned `ok` from `/_stcore/health`. The batch-screening workflow was exercised with `examples/sample_input.csv`, and the resulting interface was reviewed in a desktop viewport before the supplementary screenshots were retained. For web application version `1.1.1`, the **How to Use** user-manual download was exercised in a desktop browser; the downloaded PDF matched the version-controlled source file by SHA-256.
 
 ## Limitations of this validation
 

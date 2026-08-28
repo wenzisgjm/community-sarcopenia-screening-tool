@@ -8,6 +8,7 @@ from screening_core import predict, read_uploaded_table, validate_batch_data
 
 
 APP_DIR = Path(__file__).resolve().parent
+USER_GUIDE_PDF = APP_DIR / "output" / "pdf" / "USER_GUIDE_v1.1.1.pdf"
 
 ARTIFACTS = {
     "model": APP_DIR / "best_sarcopenia_lr_model2.pkl",
@@ -29,7 +30,7 @@ EXPECTED_FEATURES = [
 ]
 
 MODEL_VERSION = "1.0.0"
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.1.1"
 LAST_UPDATED = "August 2026"
 VALIDATION_N = 1156
 REPOSITORY_URL = "https://github.com/wenzisgjm/community-sarcopenia-screening-tool"
@@ -288,6 +289,21 @@ with tab_guide:
         "The tool should only be introduced within an organization after an appropriate clinical or research lead has "
         "reviewed these requirements with users."
     )
+
+    st.subheader("User Manual")
+    st.write(
+        "Download the illustrated user manual for batch-data preparation, variable coding, file upload, "
+        "result interpretation, troubleshooting, privacy, and governance guidance."
+    )
+    if USER_GUIDE_PDF.exists():
+        st.download_button(
+            "Download User Manual (PDF)",
+            data=USER_GUIDE_PDF.read_bytes(),
+            file_name="sarcopenia_screening_user_guide.pdf",
+            mime="application/pdf",
+        )
+    else:
+        st.warning("The user manual PDF is not available in this deployment.")
 
     st.subheader("Input Requirements")
     input_table = pd.DataFrame(

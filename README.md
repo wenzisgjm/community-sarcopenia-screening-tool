@@ -7,7 +7,7 @@ The application was developed with Streamlit and is deployed on Render. It provi
 ## Versions
 
 - Locked model version: `1.0.0`
-- Web application version: `1.1.0`
+- Web application version: `1.1.1`
 - Python: `3.12.13`
 
 The model and web application are versioned separately. Interface, documentation, or validation changes do not imply that the locked model was retrained.
@@ -52,7 +52,7 @@ The score is a screening estimate, not a confirmed individual clinical probabili
 - `tests/`: automated software-validation tests.
 - `supplementary_material/`: manuscript-ready interface screenshots generated with synthetic data.
 - `USER_GUIDE.md`: illustrated user instructions, input coding, result interpretation, and troubleshooting.
-- `output/pdf/USER_GUIDE.pdf`: submission-ready illustrated user manual.
+- `output/pdf/USER_GUIDE_v1.1.1.pdf`: current submission-ready illustrated user manual.
 - `VALIDATION.md`: software-validation scope, procedures, and temporal-validation results.
 - `requirements.txt`: pinned runtime dependencies.
 - `.python-version`: pinned Python version for deployment.
@@ -87,7 +87,9 @@ The tests verify locked artifact metadata, threshold behavior, input validation,
 
 ## User documentation
 
-See `USER_GUIDE.md` for the accessible web version of the illustrated user manual. A fixed-layout PDF version suitable for supplementary-material submission is available at `output/pdf/USER_GUIDE.pdf`.
+See `USER_GUIDE.md` for the accessible web version of the illustrated user manual. A fixed-layout PDF version suitable for supplementary-material submission is available at `output/pdf/USER_GUIDE_v1.1.1.pdf`.
+
+The same PDF can be downloaded directly from the web application under **How to Use > User Manual**.
 
 ## Important limitations
 

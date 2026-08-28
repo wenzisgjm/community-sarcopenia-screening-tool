@@ -3,7 +3,7 @@
 ## Community-Based Sarcopenia Screening Tool for Older Adults
 
 **Document version:** 1.0  
-**Web application version:** 1.1.0  
+**Web application version:** 1.1.1<br>
 **Locked model version:** 1.0.0  
 **Last updated:** August 2026
 
@@ -37,14 +37,15 @@ Legacy Excel `.xls` files are not supported and should be saved as `.xlsx` or `.
 ## 3. Quick-start workflow
 
 1. Download the CSV input template from the **How to Use** tab or use `examples/sample_input.csv`.
-2. Enter one participant per row and retain the required column names exactly.
-3. Confirm that all participants are aged 65 years or older.
-4. Confirm that categorical values use the required numeric codes.
-5. Open the **Screening** tab and upload the `.csv` or `.xlsx` file.
-6. Review warnings or errors. Correct the source file and upload it again when an error is displayed.
-7. Review the screening summary and participant-level results.
-8. Download the result CSV and store it according to institutional policy.
-9. Arrange standardised assessment for screen-positive participants according to the local protocol.
+2. Download the illustrated PDF manual from **How to Use > User Manual** when an offline copy is required.
+3. Enter one participant per row and retain the required column names exactly.
+4. Confirm that all participants are aged 65 years or older.
+5. Confirm that categorical values use the required numeric codes.
+6. Open the **Screening** tab and upload the `.csv` or `.xlsx` file.
+7. Review warnings or errors. Correct the source file and upload it again when an error is displayed.
+8. Review the screening summary and participant-level results.
+9. Download the result CSV and store it according to institutional policy.
+10. Arrange standardised assessment for screen-positive participants according to the local protocol.
 
 ## 4. Required input data
 
@@ -112,7 +113,7 @@ Do not interpret a screen-positive result as a diagnosis. Do not interpret a scr
 
 ## 7. On-screen guidance
 
-The **How to Use** tab describes the recommended workflow, training requirements, input requirements, and interpretation principles. It also provides a downloadable CSV input template.
+The **How to Use** tab describes the recommended workflow, training requirements, input requirements, and interpretation principles. It provides both a downloadable PDF user manual and a CSV input template.
 
 ![How to Use tab](supplementary_material/Figure_S1C_how_to_use.png)
 
@@ -121,7 +122,7 @@ The **How to Use** tab describes the recommended workflow, training requirements
 The model and web application are versioned separately:
 
 - Locked model version: `1.0.0`
-- Web application version: `1.1.0`
+- Web application version: `1.1.1`
 
 Changes to the interface, documentation, or software-validation evidence do not imply that the locked model was retrained.
 
