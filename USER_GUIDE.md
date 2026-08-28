@@ -67,10 +67,10 @@ The uploaded file must contain the following columns. Column names are case-sens
 
 Weight-status categories use the following BMI definitions:
 
-- Normal weight: 18.5 to less than 23 kg/m2
-- Underweight: less than 18.5 kg/m2
-- Overweight: 23 to less than 25 kg/m2
-- Obesity: 25 kg/m2 or greater
+- Normal weight: 18.5 to less than 23 kg/m²
+- Underweight: less than 18.5 kg/m²
+- Overweight: 23 to less than 25 kg/m²
+- Obesity: 25 kg/m² or greater
 
 Important: numeric codes must match those used in the model-development data. Do not replace `0`, `1`, `2`, or `3` with free-text labels.
 
@@ -185,6 +185,4 @@ The supplied screenshots were generated using synthetic records only and contain
 Source code, examples, tests, validation evidence, and the current application documentation are available at:
 
 <https://github.com/wenzisgjm/community-sarcopenia-screening-tool>
-
-This guide should be reviewed whenever the web application version, input format, result format, or operational workflow changes.
 

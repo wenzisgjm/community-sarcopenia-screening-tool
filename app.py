@@ -65,9 +65,9 @@ FIELD_DESCRIPTIONS = {
     "N_EN": "Daily energy intake (kcal/day).",
     "HE_wc": "Waist circumference (cm).",
     "obe_4class": (
-        "Four-category weight status: Normal weight=0 (18.5 <= BMI < 23 kg/m2); "
-        "Underweight=1 (BMI < 18.5 kg/m2); Overweight=2 (23 <= BMI < 25 kg/m2); "
-        "Obesity=3 (BMI >= 25 kg/m2)."
+        "Four-category weight status: Normal weight=0 (18.5 <= BMI < 23 kg/m²); "
+        "Underweight=1 (BMI < 18.5 kg/m²); Overweight=2 (23 <= BMI < 25 kg/m²); "
+        "Obesity=3 (BMI >= 25 kg/m²)."
     ),
 }
 
