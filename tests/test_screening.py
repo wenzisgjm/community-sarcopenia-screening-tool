@@ -119,6 +119,30 @@ class ScreeningValidationTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertTrue(any("EQ5D (1)" in warning for warning in warnings))
 
+    def test_age_above_80_requires_top_coding(self):
+        data = pd.DataFrame(
+            {
+                "ID": ["SYN-AGE"],
+                "sex": ["F"],
+                "age": [81],
+                "EQ5D": [0.8],
+                "pa_aerobic": [0],
+                "is_allownc": [0],
+                "Chew_Diff": [0],
+                "Prot_Deficiency": [0],
+                "N_EN": [1600],
+                "HE_wc": [80],
+                "obe_4class": [0],
+            }
+        )
+
+        _, errors, _ = validate_batch_data(data, FEATURES)
+        self.assertTrue(any("must be coded as 80" in error for error in errors))
+
+        data.loc[0, "age"] = 80
+        _, errors, _ = validate_batch_data(data, FEATURES)
+        self.assertEqual(errors, [])
+
     def test_supported_batch_file_formats(self):
         source = pd.DataFrame({"ID": ["SYN-FILE"], "age": [70]})
 

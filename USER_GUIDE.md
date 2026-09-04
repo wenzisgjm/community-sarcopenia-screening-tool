@@ -3,9 +3,9 @@
 ## Community-Based Sarcopenia Screening Tool for Older Adults
 
 **Document version:** 1.0  
-**Web application version:** 1.1.1<br>
+**Web application version:** 1.1.2<br>
 **Locked model version:** 1.0.0  
-**Last updated:** August 2026
+**Last updated:** September 2026
 
 ## 1. Purpose and scope
 
@@ -39,7 +39,7 @@ Legacy Excel `.xls` files are not supported and should be saved as `.xlsx` or `.
 1. Download the CSV input template from the **How to Use** tab or use `examples/sample_input.csv`.
 2. Download the illustrated PDF manual from **How to Use > User Manual** when an offline copy is required.
 3. Enter one participant per row and retain the required column names exactly.
-4. Confirm that all participants are aged 65 years or older.
+4. Confirm that all participants are aged 65 years or older and code ages 80 years or older as 80.
 5. Confirm that categorical values use the required numeric codes.
 6. Open the **Screening** tab and upload the `.csv` or `.xlsx` file.
 7. Review warnings or errors. Correct the source file and upload it again when an error is displayed.
@@ -55,10 +55,10 @@ The uploaded file must contain the following columns. Column names are case-sens
 |---|---|
 | `ID` | Non-identifying participant code. Required for result management; not used by the model. |
 | `sex` | Participant sex. Retained for result management; not used by the model. |
-| `age` | Numeric age in years. Every participant must be aged 65 years or older. |
+| `age` | Numeric age in years; ages 80 years or older must be coded as 80. |
 | `EQ5D` | Numeric EQ-5D health utility index. |
 | `pa_aerobic` | Meets the specified aerobic activity recommendation = 0; does not meet it = 1. |
-| `is_allownc` | Receives livelihood assistance or subsidies = 1; does not receive them = 0. |
+| `is_allownc` | Current/previous National Basic Livelihood Security receipt = 1; no history = 0. |
 | `Chew_Diff` | Difficulty chewing = 1; no difficulty chewing = 0. |
 | `Prot_Deficiency` | Protein intake is insufficient = 1; sufficient = 0. Insufficient means below 60 g/day for men and below 50 g/day for women. |
 | `N_EN` | Numeric daily energy intake in kcal/day. |
@@ -82,7 +82,7 @@ The application checks:
 
 - whether all required columns are present;
 - whether model inputs are numeric;
-- whether age is present and at least 65 years;
+- whether age is present and between 65 and 80 after coding ages 80 years or older as 80;
 - whether binary fields contain only 0 or 1;
 - whether `obe_4class` contains only 0, 1, 2, or 3;
 - whether participant identifiers are missing or duplicated; and
@@ -122,7 +122,7 @@ The **How to Use** tab describes the recommended workflow, training requirements
 The model and web application are versioned separately:
 
 - Locked model version: `1.0.0`
-- Web application version: `1.1.1`
+- Web application version: `1.1.2`
 
 Changes to the interface, documentation, or software-validation evidence do not imply that the locked model was retrained.
 
@@ -156,6 +156,7 @@ The tool must not be used to diagnose sarcopenia, make autonomous treatment deci
 | Missing required columns | Restore the exact required column names and check spelling and capitalisation. |
 | Non-numeric values | Replace text in model-input fields with valid numeric values or codes. |
 | Participant younger than 65 years | Remove the record; the model is restricted to adults aged 65 years and older. |
+| Age above 80 | Code ages 80 years or older as 80 and upload the file again. |
 | Invalid binary code | Use only 0 or 1 according to the definition for that variable. |
 | Invalid weight-status code | Use only 0, 1, 2, or 3 according to the defined BMI categories. |
 | Missing model inputs warning | Verify the source data. If the missing values are retained, document that locked-pipeline imputation was used. |

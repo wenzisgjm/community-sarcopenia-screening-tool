@@ -63,11 +63,17 @@ def validate_batch_data(data: pd.DataFrame, feature_columns: list[str]):
 
     if validated["age"].isna().any():
         errors.append("Age is required for every participant and cannot be missing.")
-    elif (validated["age"] < 65).any():
+    if (validated["age"] < 65).any():
         count = int((validated["age"] < 65).sum())
         errors.append(
             f"{count} participant(s) are younger than 65 years. "
             "The model should only be used within its intended population."
+        )
+    if (validated["age"] > 80).any():
+        count = int((validated["age"] > 80).sum())
+        errors.append(
+            f"{count} participant(s) have age values above 80. "
+            "Ages 80 years or older must be coded as 80."
         )
 
     for column in BINARY_FEATURES:

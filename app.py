@@ -8,7 +8,7 @@ from screening_core import predict, read_uploaded_table, validate_batch_data
 
 
 APP_DIR = Path(__file__).resolve().parent
-USER_GUIDE_PDF = APP_DIR / "output" / "pdf" / "USER_GUIDE_v1.1.1.pdf"
+USER_GUIDE_PDF = APP_DIR / "output" / "pdf" / "USER_GUIDE_v1.1.2.pdf"
 
 ARTIFACTS = {
     "model": APP_DIR / "best_sarcopenia_lr_model2.pkl",
@@ -30,8 +30,8 @@ EXPECTED_FEATURES = [
 ]
 
 MODEL_VERSION = "1.0.0"
-APP_VERSION = "1.1.1"
-LAST_UPDATED = "August 2026"
+APP_VERSION = "1.1.2"
+LAST_UPDATED = "September 2026"
 VALIDATION_N = 1156
 REPOSITORY_URL = "https://github.com/wenzisgjm/community-sarcopenia-screening-tool"
 
@@ -51,7 +51,7 @@ TEMPORAL_VALIDATION_PERFORMANCE = [
 FIELD_DESCRIPTIONS = {
     "ID": "Participant identifier, used to locate screen-positive individuals; not used for model prediction.",
     "sex": "Sex, retained for participant identification and result management; not used for model prediction.",
-    "age": "Age (years).",
+    "age": "Numeric age in years; ages 80 years or older must be coded as 80.",
     "EQ5D": "Health utility index derived from the EQ-5D health questionnaire.",
     "pa_aerobic": (
         "Whether the participant performs at least 150 minutes of moderate-intensity physical activity "
@@ -59,7 +59,7 @@ FIELD_DESCRIPTIONS = {
         "combination of moderate- and vigorous-intensity activity (1 minute of vigorous activity is "
         "equivalent to 2 minutes of moderate activity); yes=0, no=1."
     ),
-    "is_allownc": "Whether the participant receives livelihood assistance or subsidies; yes=1, no=0.",
+    "is_allownc": "Current/previous National Basic Livelihood Security receipt = 1; no history = 0.",
     "Chew_Diff": "Whether the participant has difficulty chewing; yes=1, no=0.",
     "Prot_Deficiency": "Whether protein intake is insufficient; below 60 g/day for men and below 50 g/day for women. Enough=0, Insufficient=1.",
     "N_EN": "Daily energy intake (kcal/day).",
@@ -74,10 +74,10 @@ FIELD_DESCRIPTIONS = {
 INPUT_REQUIREMENTS = {
     "ID": "Participant identifier; required for result management and not used by the model.",
     "sex": "Participant sex; retained for result management and not used by the model.",
-    "age": "Numeric age in years; must be 65 years or older.",
+    "age": "Numeric age in years; ages 80 years or older must be coded as 80.",
     "EQ5D": "Numeric EQ-5D health utility index.",
     "pa_aerobic": "Binary code: meets the specified aerobic activity recommendation=0, does not meet it=1.",
-    "is_allownc": "Binary code: receives livelihood assistance or subsidies=1, does not receive them=0.",
+    "is_allownc": "Current/previous National Basic Livelihood Security receipt = 1; no history = 0.",
     "Chew_Diff": "Binary code: difficulty chewing=1, no difficulty chewing=0.",
     "Prot_Deficiency": "Binary code: insufficient protein intake=1, sufficient protein intake=0.",
     "N_EN": "Numeric daily energy intake in kcal/day.",

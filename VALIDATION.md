@@ -2,7 +2,7 @@
 
 ## Scope
 
-This document describes validation checks for web application version `1.1.1` using locked model version `1.0.0`. The checks evaluate implementation consistency and input-handling behavior. They do not constitute prospective clinical validation or external validation in an independent population.
+This document describes validation checks for web application version `1.1.2` using locked model version `1.0.0`. The checks evaluate implementation consistency and input-handling behavior. They do not constitute prospective clinical validation or external validation in an independent population.
 
 ## Locked artifacts
 
@@ -37,9 +37,10 @@ The test suite checks that:
 3. The classification boundary uses `score >= threshold`.
 4. Each screening classification receives the correct `recommended_action`.
 5. Records younger than 65 years are rejected.
-6. Invalid binary and obesity-class codes are rejected.
-7. Missing non-age predictors generate an imputation warning.
-8. The synthetic example input reproduces the version-controlled expected output within the specified numerical tolerance.
+6. Age values above 80 are rejected with an instruction to code ages 80 years or older as 80.
+7. Invalid binary and obesity-class codes are rejected.
+8. Missing non-age predictors generate an imputation warning.
+9. The synthetic example input reproduces the version-controlled expected output within the specified numerical tolerance.
 
 ## Synthetic validation example
 
@@ -68,7 +69,7 @@ ROC-AUC, area under the receiver operating characteristic curve; PR-AUC, area un
 
 ## Input validation implemented in the application
 
-The application checks required columns, numeric conversion, age eligibility, binary codes, obesity-class codes, missing participant codes, duplicate participant codes, and missing predictor values. Missing non-age model inputs are handled by the imputation steps stored inside the locked preprocessing pipeline, and the application displays a warning before prediction.
+The application checks required columns, numeric conversion, age eligibility (including the requirement to code ages 80 years or older as 80), binary codes, obesity-class codes, missing participant codes, duplicate participant codes, and missing predictor values. Missing non-age model inputs are handled by the imputation steps stored inside the locked preprocessing pipeline, and the application displays a warning before prediction.
 
 ## Reproducibility controls
 
@@ -80,7 +81,7 @@ The application checks required columns, numeric conversion, age eligibility, bi
 
 ## Validation record
 
-On 28 August 2026, the automated suite completed successfully under Python `3.12.13`: 6 tests run, 6 passed, 0 failed. The Streamlit application compiled successfully, started locally, and returned `ok` from `/_stcore/health`. The batch-screening workflow was exercised with `examples/sample_input.csv`, and the resulting interface was reviewed in a desktop viewport before the supplementary screenshots were retained. For web application version `1.1.1`, the **How to Use** user-manual download was exercised in a desktop browser; the downloaded PDF matched the version-controlled source file by SHA-256.
+On 4 September 2026, the automated suite completed successfully under Python `3.12.14`: 7 tests run, 7 passed, 0 failed. The Streamlit application compiled successfully, started locally, and returned `ok` from `/_stcore/health`. The batch-screening workflow was exercised with `examples/sample_input.csv`, including the updated age top-coding example, and the resulting interface was reviewed in a desktop viewport before the supplementary screenshots were retained. For web application version `1.1.2`, the **How to Use** tab displayed the updated field definitions and the user-manual download control, and the regenerated PDF was checked by text extraction and visual review of all pages.
 
 ## Limitations of this validation
 

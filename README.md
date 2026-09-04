@@ -7,7 +7,7 @@ The application was developed with Streamlit and is deployed on Render. It provi
 ## Versions
 
 - Locked model version: `1.0.0`
-- Web application version: `1.1.1`
+- Web application version: `1.1.2`
 - Python: `3.12.13`
 
 The model and web application are versioned separately. Interface, documentation, or validation changes do not imply that the locked model was retrained.
@@ -28,7 +28,7 @@ ID, sex, age, EQ5D, pa_aerobic, is_allownc, Chew_Diff,
 Prot_Deficiency, N_EN, HE_wc, obe_4class
 ```
 
-`ID` should be a non-identifying participant code. `ID` and `sex` are retained for result management and are not used as model predictors. Detailed definitions and coding rules are displayed in the application under **How to Use** and **Model Info**.
+`ID` should be a non-identifying participant code. `ID` and `sex` are retained for result management and are not used as model predictors. Age must be numeric, with ages 80 years or older coded as 80. For `is_allownc`, current or previous National Basic Livelihood Security receipt is coded as 1 and no history as 0. Detailed definitions and coding rules are displayed in the application under **How to Use** and **Model Info**.
 
 ## Output
 
@@ -52,7 +52,7 @@ The score is a screening estimate, not a confirmed individual clinical probabili
 - `tests/`: automated software-validation tests.
 - `supplementary_material/`: manuscript-ready interface screenshots generated with synthetic data.
 - `USER_GUIDE.md`: illustrated user instructions, input coding, result interpretation, and troubleshooting.
-- `output/pdf/USER_GUIDE_v1.1.1.pdf`: current submission-ready illustrated user manual.
+- `output/pdf/USER_GUIDE_v1.1.2.pdf`: current submission-ready illustrated user manual.
 - `VALIDATION.md`: software-validation scope, procedures, and temporal-validation results.
 - `requirements.txt`: pinned runtime dependencies.
 - `.python-version`: pinned Python version for deployment.
@@ -87,7 +87,7 @@ The tests verify locked artifact metadata, threshold behavior, input validation,
 
 ## User documentation
 
-See `USER_GUIDE.md` for the accessible web version of the illustrated user manual. A fixed-layout PDF version suitable for supplementary-material submission is available at `output/pdf/USER_GUIDE_v1.1.1.pdf`.
+See `USER_GUIDE.md` for the accessible web version of the illustrated user manual. A fixed-layout PDF version suitable for supplementary-material submission is available at `output/pdf/USER_GUIDE_v1.1.2.pdf`.
 
 The same PDF can be downloaded directly from the web application under **How to Use > User Manual**.
 
